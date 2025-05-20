@@ -1,3 +1,14 @@
 *.log
 *.swp
 .DS_Store
+
+
+Opción A: Línea de comandos (Git local)
+
+En tu carpeta local del proyecto:
+git init                                      # Si aún no lo has inicializado
+git add .                                     # Añade todos los archivos
+git commit -m "Inicial: documentación y scripts"  # Primer commit
+git branch -M main                            # Asegura la rama principal se llame main
+git remote add origin https://github.com/Luk1313/dvwa-wsl-setup.git
+git push -u origin main    
