@@ -1,0 +1,25 @@
+## Clona el repositorio oficial de DVWA:
+cd /var/www/html
+sudo git clone https://github.com/digininja/DVWA.git
+sudo chown -R www-data:www-data DVWA
+
+## Crea la base de datos y el usuario DVWA:
+sudo mariadb -e "
+CREATE DATABASE dvwa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'dvwa_pass';
+GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
+FLUSH PRIVILEGES;"
+
+## Configura las credenciales y reCAPTCHA:
+sudo sed -i "s/\\$_DVWA\['db_user'\].*/\\$_DVWA['"db_user"'] = 'dvwa';/" /var/www/html/DVWA/config/config.inc.php
+sudo sed -i "s/\\$_DVWA\['db_password'\].*/\\$_DVWA['db_password'] = 'dvwa_pass';/" /var/www/html/DVWA/config/config.inc.php
+cat << 'EOF' | sudo tee -a /var/www/html/DVWA/config/config.inc.php
+
+## ReCAPTCHA settings
+$_DVWA['recaptcha_public_key']  = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+$_DVWA['recaptcha_private_key'] = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
+EOF
+
+4. Reinicia Apache:
+```bash
+sudo service apache2 reload
